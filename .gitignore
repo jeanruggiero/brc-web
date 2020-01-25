@@ -127,3 +127,13 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.idea/
+old_data.json
+brc-backend
+latest.dump
+
+*/migrations/
+node_modules/
+
+.DS_Store
