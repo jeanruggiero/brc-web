@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import LeavenworthReview, SkillsNightReview, Squamish1Review, \
+    Squamish2Review, GradClimbReview, InstructorReview
 
-# Register your models here.
+
+admin.site.register([LeavenworthReview, SkillsNightReview, Squamish1Review,
+                     Squamish2Review, GradClimbReview, InstructorReview])

@@ -39,7 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'brc_data',
+    'gear',
+    'homework',
+    # 'instructors',
+    'meetings',
+    'posts',
+    'reviews',
+    'students',
+    'profiles',
 
 ]
 
@@ -81,7 +88,11 @@ WSGI_APPLICATION = 'brc_python.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'brc-2018',
+        'NAME': 'brc-backend',
+        'USER': 'postgres',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -124,4 +135,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-CORS_ORIGIN_WHITELIST = ('localhost:3000/')
+CORS_ORIGIN_WHITELIST = ('http://localhost:3000', )
