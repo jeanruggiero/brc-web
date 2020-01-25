@@ -16,16 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-# from rest_framework import routers
-#
-# from gear import views as gear_views
-# from homework import views as homework_views
+from rest_framework import routers
 
-# router = routers.DefaultRouter()
-# router.register(r'gear', gear_views.GearView, 'gear')
-# router.register(r'homework', homework_views.HomeworkView, 'homework')
+from gear import views as gear_views
+#from homework import views as homework_views
+
+router = routers.DefaultRouter()
+router.register(r'gear', gear_views.GearView, 'gear')
+#router.register(r'homework', homework_views.HomeworkView, 'homework')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('api/', include(router.urls)),
+    path('api/', include(router.urls)),
 ]

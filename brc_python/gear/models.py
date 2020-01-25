@@ -12,4 +12,4 @@ class Gear(models.Model):
 
     class Meta:
         verbose_name_plural = 'gear'
-        # db_table = 'profiles_gear'
+
