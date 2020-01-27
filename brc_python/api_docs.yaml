@@ -1,0 +1,1384 @@
+---
+swagger: "2.0"
+info:
+  description: This is an API that allows access to Boealps BRC course and participant data.
+  version: 1.0.0
+  title: BRC API
+  contact:
+    email: jeanruggiero@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: virtserver.swaggerhub.com
+basePath: /jeanruggiero/brc-web/1.0.0
+schemes:
+- https
+paths:
+  /students:
+    get:
+      summary: returns all students matching criteria
+      description: When called with no parameters, returns all students.
+      produces:
+      - application/json
+      parameters:
+      - name: lastName
+        in: query
+        description: pass an optional search string for looking up a student by last name
+        required: false
+        type: string
+      - name: firstName
+        in: query
+        description: pass an optional search string for looking up a student by first name
+        required: false
+        type: string
+      responses:
+        "200":
+          description: students matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Student'
+        "400":
+          description: bad input parameter
+        "403":
+          description: student does not exist
+  /students/{id}:
+    get:
+      summary: returns the student with the specified id
+      description: When called with no parameters, returns all students.
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id of student to get
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: student matching criteria
+          schema:
+            type: object
+        "400":
+          description: bad input parameter
+        "403":
+          description: student does not exist
+    put:
+      summary: updates an existing student's profile
+      description: Updates the profile of an existing student.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id of student to get
+        required: true
+        type: integer
+      - in: body
+        name: student
+        description: Student to update
+        required: true
+        schema:
+          $ref: '#/definitions/Student'
+      responses:
+        "201":
+          description: student information updated
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+  /gear:
+    get:
+      summary: returns a list of all gear
+      description: Returns a list of all gear.
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: a list of all gear
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Gear'
+  /homework:
+    get:
+      summary: returns a list of homework matching the criteria
+      description: Returns a list of homework matching the search criteria. If no search parameters are provided, all homework objects are returned.
+      produces:
+      - application/json
+      parameters:
+      - name: dueAfter
+        in: query
+        description: return all homework objects due after the specified date
+        required: false
+        type: string
+        format: YYYY-MM-DD
+      - name: dueBefore
+        in: query
+        description: return all homework objects due before the specified date
+        required: false
+        type: string
+        format: YYYY-MM-DD
+      responses:
+        "200":
+          description: homework matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Homework'
+  /meetings/lectures:
+    get:
+      summary: returns a list of lectures matching the criteria
+      description: Returns a list of lectures matching the search criteria. If no search parameters are provided, all lectures are returned.
+      produces:
+      - application/json
+      parameters:
+      - name: occursAfter
+        in: query
+        description: return all lectures occurring after the specified date
+        required: false
+        type: string
+        format: YYYY-MM-DD
+      - name: occursBefore
+        in: query
+        description: return all lectures occurring before the specified date
+        required: false
+        type: string
+        format: YYYY-MM-DD
+      responses:
+        "200":
+          description: lectures matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Lecture'
+  /meetings/outings:
+    get:
+      summary: returns a list of outings matching the criteria
+      description: Returns a list of outings matching the search criteria. If no search parameters are provided, all outings are returned.
+      produces:
+      - application/json
+      parameters:
+      - name: occursAfter
+        in: query
+        description: return all outings occurring after the specified date
+        required: false
+        type: string
+        format: YYYY-MM-DD
+      - name: occursBefore
+        in: query
+        description: return all outings occurring before the specified date
+        required: false
+        type: string
+        format: YYYY-MM-DD
+      responses:
+        "200":
+          description: outings matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Outing'
+  /posts:
+    get:
+      summary: returns a list of all course updates
+      description: Returns a list of all course updates.
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: all course updates
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Update'
+  /reviews/skills_night:
+    get:
+      summary: returns a list of skills night reviews matching the criteria
+      description: Returns a list of skills night reviews for the specified student or instructor.
+      produces:
+      - application/json
+      parameters:
+      - name: student
+        in: query
+        description: id of a student
+        required: false
+        type: integer
+      - name: instructor
+        in: query
+        description: id of a Django User of type Instructor
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: reviews matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SkillsNightReview'
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+    post:
+      summary: creates a new skills night review
+      description: Creates a new review.
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: review
+        description: Review to add
+        required: true
+        schema:
+          $ref: '#/definitions/SkillsNightReview'
+      responses:
+        "201":
+          description: review information updated
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+  /reviews/skills_night/{id}:
+    get:
+      summary: returns the skills night review with the specified id
+      description: Returns the skills night review with the specified id.
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id of review to retrieve
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: review matching criteria
+          schema:
+            type: object
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+    put:
+      summary: updates an existing skills night review
+      description: Updates an existing review.
+      consumes:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id of review to be modified
+        required: true
+        type: integer
+      - in: body
+        name: review
+        description: Review to update
+        required: true
+        schema:
+          $ref: '#/definitions/SkillsNightReview'
+      responses:
+        "201":
+          description: review information updated
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested review does not exist
+  /reviews/leavenworth:
+    get:
+      summary: returns a list of leavenworth reviews matching the criteria
+      description: Returns a list of leavenworth reviews for the specified student and/or instructor.
+      produces:
+      - application/json
+      parameters:
+      - name: student
+        in: query
+        description: id of a student
+        required: false
+        type: integer
+      - name: instructor
+        in: query
+        description: id of a Django User of type Instructor
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: reviews matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LeavenworthReview'
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+    post:
+      summary: creates a new leavenworth review
+      description: Creates a new review.
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: review
+        description: Review to add
+        required: true
+        schema:
+          $ref: '#/definitions/LeavenworthReview'
+      responses:
+        "201":
+          description: review information updated
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+  /reviews/leavenworth/{id}:
+    get:
+      summary: returns the leavenworth review with specified id
+      description: Returns the leavenworth review with the specified id.
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id of review to retrieve
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: review matching criteria
+          schema:
+            type: object
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+    put:
+      summary: updates an existing leavenworth review
+      description: Updates an existing review.
+      consumes:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id of review to update
+        required: true
+        type: integer
+      - in: body
+        name: review
+        description: Review to update
+        required: true
+        schema:
+          $ref: '#/definitions/LeavenworthReview'
+      responses:
+        "201":
+          description: review information updated
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested review does not exist
+  /reviews/squamish1:
+    get:
+      summary: returns a list of squamish1 reviews matching the criteria
+      description: Returns a list of squamish1 reviews for the specified student and/or instructor.
+      produces:
+      - application/json
+      parameters:
+      - name: student
+        in: query
+        description: id of a student
+        required: false
+        type: integer
+      - name: instructor
+        in: query
+        description: id of a Django User of type Instructor
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: reviews matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Squamish1Review'
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+    post:
+      summary: creates a new squamish1 review
+      description: Creates a new review.
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: review
+        description: Review to add
+        required: true
+        schema:
+          $ref: '#/definitions/Squamish1Review'
+      responses:
+        "201":
+          description: review information updated
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+  /reviews/squamish1/{id}:
+    get:
+      summary: returns the squamish1 review with the specified id
+      description: Returns the squamish1 review object with the specified id.
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id of review to get
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: review matching criteria
+          schema:
+            type: object
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+    put:
+      summary: updates an existing squamish1 review
+      description: Updates an existing review.
+      consumes:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id of review to update
+        required: true
+        type: integer
+      - in: body
+        name: review
+        description: Review to update
+        required: true
+        schema:
+          $ref: '#/definitions/Squamish1Review'
+      responses:
+        "201":
+          description: review information updated
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested review does not exist
+  /reviews/squamish2:
+    get:
+      summary: returns a list of squamish2 reviews matching the criteria
+      description: Returns a list of squamish2 reviews for the specified student and/or instructor.
+      produces:
+      - application/json
+      parameters:
+      - name: student
+        in: query
+        description: id of a student
+        required: false
+        type: integer
+      - name: instructor
+        in: query
+        description: id of a Django User of type Instructor
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: reviews matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Squamish2Review'
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+    post:
+      summary: creates a new squamish2 review
+      description: Creates a new review.
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: review
+        description: Review to add
+        required: true
+        schema:
+          $ref: '#/definitions/Squamish2Review'
+      responses:
+        "201":
+          description: review information updated
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+  /reviews/squamish2/{id}:
+    get:
+      summary: returns the squamish2 review with the specified id
+      description: Returns the squamish2 review object with the specified id.
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id of review to retrieve
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: review matching criteria
+          schema:
+            type: object
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+    put:
+      summary: updates an existing squamish2 review
+      description: Updates an existing review.
+      consumes:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id of review to update
+        required: true
+        type: integer
+      - in: body
+        name: review
+        description: Review to update
+        required: true
+        schema:
+          $ref: '#/definitions/Squamish2Review'
+      responses:
+        "201":
+          description: review information updated
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested review does not exist
+  /reviews/grad_climb:
+    get:
+      summary: returns a list of grad climb reviews
+      description: Returns a list of grad climb reviews for the specified student and/or instructor.
+      produces:
+      - application/json
+      parameters:
+      - name: student
+        in: query
+        description: id of a student
+        required: false
+        type: integer
+      - name: instructor
+        in: query
+        description: id of a Django User of type Instructor
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: reviews matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GradClimbReview'
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+    post:
+      summary: creates a new grad climb review
+      description: Creates a new review.
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: review
+        description: Review to add
+        required: true
+        schema:
+          $ref: '#/definitions/GradClimbReview'
+      responses:
+        "201":
+          description: review information updated
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+  /reviews/grad_climb/{id}:
+    get:
+      summary: returns the grad climb review with the specified id
+      description: Returns the grad climb review with the specified id.
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id of review to get
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: review matching criteria
+          schema:
+            type: object
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+    put:
+      summary: updates an existing grad climb review
+      description: Updates an existing review
+      consumes:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id of review to update
+        required: true
+        type: integer
+      - in: body
+        name: review
+        description: Review to update
+        required: true
+        schema:
+          $ref: '#/definitions/GradClimbReview'
+      responses:
+        "201":
+          description: review information updated
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested review does not exist
+  /reviews/instructor_review:
+    get:
+      summary: returns a list of instructor reviews matching the criteria
+      description: Returns a list of instructor reviews for the specified student and/or instructor.
+      produces:
+      - application/json
+      parameters:
+      - name: student
+        in: query
+        description: id of a student
+        required: false
+        type: integer
+      - name: instructor
+        in: query
+        description: id of a Django User of type Instructor
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: reviews matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/InstructorReview'
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+    post:
+      summary: creates a new instructor review
+      description: Creates a new review.
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: review
+        description: Review to add
+        required: true
+        schema:
+          $ref: '#/definitions/InstructorReview'
+      responses:
+        "201":
+          description: review information updated
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested instructor does not exist
+  /reviews/instructor_review/{id}:
+    get:
+      summary: returns the instructor review with the specified id
+      description: Returns the instructor review with the specified id.
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id of review to get
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: review matching criteria
+          schema:
+            type: object
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested student does not exist
+    put:
+      summary: updates an existing instructor review
+      description: Updates an existing review
+      consumes:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id of review to update
+        required: true
+        type: integer
+      - in: body
+        name: review
+        description: Review to update
+        required: true
+        schema:
+          $ref: '#/definitions/InstructorReview'
+      responses:
+        "201":
+          description: review information updated
+        "400":
+          description: invalid input, object invalid
+        "404":
+          description: requested review does not exist
+definitions:
+  Student:
+    type: object
+    required:
+    - city
+    - email
+    - emergencyContact
+    - emergencyContactPhone
+    - firstName
+    - id
+    - insuranceCarrier
+    - lastName
+    - phone
+    - state
+    - streetAddress
+    - zip
+    properties:
+      id:
+        type: integer
+        example: 1
+      lastName:
+        type: string
+        example: Smith
+      firstName:
+        type: string
+        example: Jonathan
+      nickname:
+        type: string
+        example: Johnny
+      pronouns:
+        type: string
+        example: He/him
+      aboutMe:
+        type: string
+        example: Hi, I'm Johnny. I like climbing and I'm excited for this class!
+      favoriteClimb:
+        type: string
+        example: Castle Peak
+      goalClimb:
+        type: string
+        example: Beckey Route on Liberty Bell
+      funFact:
+        type: string
+        example: I'm afraid of bears.
+      email:
+        type: string
+        example: johnny@somewhere.com
+      phone:
+        type: integer
+        example: 1234567890
+      streetAddress:
+        type: string
+        example: 123 Lane St
+      city:
+        type: string
+        example: Seattle
+      state:
+        type: string
+        example: WA
+      zip:
+        type: integer
+        example: 98122
+      insuranceCarrier:
+        type: string
+        example: BlueCross
+      emergencyContact:
+        type: string
+        example: Mommy
+      emergencyContactPhone:
+        type: integer
+        example: 1234567890
+  Gear:
+    type: object
+    required:
+    - description
+    - id
+    - name
+    properties:
+      id:
+        type: integer
+        example: 1
+      name:
+        type: string
+        example: Rope
+      description:
+        type: string
+        example: 80m dry rope
+      recommendation:
+        type: string
+        format: url
+        example: www.ropes.com/coolrope
+  Homework:
+    type: object
+    required:
+    - id
+    - title
+    properties:
+      id:
+        type: integer
+        example: 1
+      title:
+        type: string
+        example: Watch climbing videos
+      description:
+        type: string
+        example: Watch all five videos
+      link:
+        type: string
+        format: url
+        example: www.climbingvideo.com
+      due_date:
+        type: string
+        format: YYYY-MM-DD HH:MM:SS+ss:ss
+        example: 2019-07-08 01:41:50+00:00
+      lecture:
+        type: integer
+        example: 1
+        description: primary key for associated lecture item (lecture number)
+  Lecture:
+    type: object
+    required:
+    - location
+    - number
+    - time
+    - topic
+    properties:
+      number:
+        type: integer
+        example: 1
+      topic:
+        type: string
+        example: Climbing Technique
+      time:
+        type: string
+        format: YYYY-MM-DD HH:MM:SS+ss:ss
+        example: 2019-07-08 01:41:50+00:00
+      location:
+        type: string
+        example: Lecture Room
+      presentationFile:
+        type: string
+        format: url
+        example: www.files.com/lecture1
+      locationLink:
+        type: string
+        format: url
+        example: maps.google.com
+      potluckLink:
+        type: string
+        format: url
+        example: www.files.com/potluck1
+  Outing:
+    type: object
+    required:
+    - description
+    - endDate
+    - id
+    - itinerary
+    - location
+    - objectives
+    - startDate
+    - title
+    properties:
+      id:
+        type: integer
+        example: 1
+      title:
+        type: string
+        example: Leavenworth Outing
+      location:
+        type: string
+        example: Leavenworth, WA
+      startDate:
+        type: string
+        format: YYYY-MM-DD HH:MM:SS+ss:ss
+        example: 2019-07-08 01:41:50+00:00
+      endDate:
+        type: string
+        format: YYYY-MM-DD HH:MM:SS+ss:ss
+        example: 2019-07-08 01:41:50+00:00
+      objectives:
+        type: string
+        example: Learn some new things
+      description:
+        type: string
+        example: Let's do some climbing and also learn things.
+      itinerary:
+        type: string
+        example: '8am: Meet up, 9am: climb'
+      campground:
+        type: string
+        example: State Park Campground
+      campsite:
+        type: string
+        example: group site, site 5
+      campingLocation:
+        type: string
+        format: url
+        example: maps.google.com
+      campingCheckin:
+        type: string
+        format: YYYY-MM-DD HH:MM:SS+ss:ss
+        example: 2019-07-08 01:41:50+00:00
+  Update:
+    type: object
+    required:
+    - content
+    - id
+    - time
+    - title
+    properties:
+      id:
+        type: integer
+        example: 1
+      author:
+        type: integer
+        example: 1
+        description: primary key value for a User object
+      time:
+        type: string
+        format: YYYY-MM-DD HH:MM:SS+ss:ss
+        example: 2019-07-08 01:41:50+00:00
+      title:
+        type: string
+        example: Announcing the Start of Class!
+      content:
+        type: string
+        example: Here is the content of a class update. It could say anything.
+  SkillsNightReview:
+    type: object
+    properties:
+      student:
+        $ref: '#/definitions/Student'
+      time:
+        type: string
+        format: YYYY-MM-DD HH:MM:SS+ss:ss
+        example: 2019-07-08 01:41:50+00:00
+      outing:
+        $ref: '#/definitions/Outing'
+      rewoven_figure_8:
+        type: integer
+        example: 2
+      figure_8_bight:
+        type: integer
+        example: 2
+      prusik:
+        type: integer
+        example: 2
+      bachmann:
+        type: integer
+        example: 2
+      double_fisherman:
+        type: integer
+        example: 2
+      water_knot:
+        type: integer
+        example: 2
+      clove_hitch:
+        type: integer
+        example: 2
+      munter_hitch:
+        type: integer
+        example: 2
+      butterfly:
+        type: integer
+        example: 2
+      euro_death_knot:
+        type: integer
+        example: 2
+      rope_coiling:
+        type: integer
+        example: 2
+      lead_belay:
+        type: integer
+        example: 2
+      lead_fall:
+        type: integer
+        example: 2
+      escape_belay:
+        type: integer
+        example: 2
+      mechanical_autoblock:
+        type: integer
+        example: 2
+      munter_rappel:
+        type: integer
+        example: 2
+      clean_rappel_bolts:
+        type: integer
+        example: 2
+      setting_bolted_anchor:
+        type: integer
+        example: 2
+      ascending_rope:
+        type: integer
+        example: 2
+      comments:
+        type: string
+        example: Here are some comments about how this student did.
+  LeavenworthReview:
+    type: object
+    properties:
+      student:
+        $ref: '#/definitions/Student'
+      instructor:
+        type: object
+        description: authenticated User object
+        properties: {}
+      time:
+        type: string
+        format: YYYY-MM-DD HH:MM:SS+ss:ss
+        example: 2019-07-08 01:41:50+00:00
+      outing:
+        $ref: '#/definitions/Outing'
+      knots:
+        type: integer
+        example: 2
+      belay:
+        type: integer
+        example: 2
+      rappel:
+        type: integer
+        example: 2
+      systems:
+        type: integer
+        example: 2
+      anchor_safety:
+        type: integer
+        example: 2
+      gear_placement:
+        type: integer
+        example: 2
+      anchor_building:
+        type: integer
+        example: 2
+      safety:
+        type: integer
+        example: 2
+      efficiency:
+        type: integer
+        example: 2
+      gear_cleaning:
+        type: integer
+        example: 2
+      technique:
+        type: integer
+        example: 2
+      routefinding:
+        type: integer
+        example: 2
+      areas:
+        type: string
+        example: Bob's Wall
+      current_comfort_grade:
+        type: string
+        format: YDS climbing grade
+        example: "5.9"
+      current_limit_grade:
+        type: string
+        format: YDS climbing grade
+        example: "5.9"
+      recommendation:
+        type: string
+        example: 5.9 multipitch
+      comments:
+        type: string
+        example: Here are some comments about how this student did.
+      leavenworth_clean_and_rappel_bolts:
+        type: integer
+        example: 2
+      guide_mode:
+        type: integer
+        example: 2
+  Squamish1Review:
+    type: object
+    properties:
+      student:
+        $ref: '#/definitions/Student'
+      instructor:
+        type: object
+        description: authenticated User object
+        properties: {}
+      time:
+        type: string
+        format: YYYY-MM-DD HH:MM:SS+ss:ss
+        example: 2019-07-08 01:41:50+00:00
+      outing:
+        $ref: '#/definitions/Outing'
+      knots:
+        type: integer
+        example: 2
+      belay:
+        type: integer
+        example: 2
+      rappel:
+        type: integer
+        example: 2
+      systems:
+        type: integer
+        example: 2
+      anchor_safety:
+        type: integer
+        example: 2
+      gear_placement:
+        type: integer
+        example: 2
+      anchor_building:
+        type: integer
+        example: 2
+      safety:
+        type: integer
+        example: 2
+      efficiency:
+        type: integer
+        example: 2
+      gear_cleaning:
+        type: integer
+        example: 2
+      technique:
+        type: integer
+        example: 2
+      routefinding:
+        type: integer
+        example: 2
+      areas:
+        type: string
+        example: Bob's Wall
+      current_comfort_grade:
+        type: string
+        format: YDS climbing grade
+        example: "5.9"
+      current_limit_grade:
+        type: string
+        format: YDS climbing grade
+        example: "5.9"
+      recommendation:
+        type: string
+        example: 5.9 multipitch
+      comments:
+        type: string
+        example: Here are some comments about how this student did.
+      clean_and_rappel:
+        type: integer
+        example: 2
+  Squamish2Review:
+    type: object
+    properties:
+      student:
+        $ref: '#/definitions/Student'
+      instructor:
+        type: object
+        description: authenticated User object
+        properties: {}
+      time:
+        type: string
+        format: YYYY-MM-DD HH:MM:SS+ss:ss
+        example: 2019-07-08 01:41:50+00:00
+      outing:
+        $ref: '#/definitions/Outing'
+      knots:
+        type: integer
+        example: 2
+      belay:
+        type: integer
+        example: 2
+      rappel:
+        type: integer
+        example: 2
+      systems:
+        type: integer
+        example: 2
+      anchor_safety:
+        type: integer
+        example: 2
+      gear_placement:
+        type: integer
+        example: 2
+      anchor_building:
+        type: integer
+        example: 2
+      safety:
+        type: integer
+        example: 2
+      efficiency:
+        type: integer
+        example: 2
+      gear_cleaning:
+        type: integer
+        example: 2
+      technique:
+        type: integer
+        example: 2
+      routefinding:
+        type: integer
+        example: 2
+      areas:
+        type: string
+        example: Bob's Wall
+      current_comfort_grade:
+        type: string
+        format: YDS climbing grade
+        example: "5.9"
+      current_limit_grade:
+        type: string
+        format: YDS climbing grade
+        example: "5.9"
+      recommendation:
+        type: string
+        example: 5.9 multipitch
+      comments:
+        type: string
+        example: Here are some comments about how this student did.
+      squamish2_transitions:
+        type: integer
+        example: 2
+      squamish2_communication:
+        type: integer
+        example: 2
+  GradClimbReview:
+    type: object
+    properties:
+      student:
+        $ref: '#/definitions/Student'
+      instructor:
+        type: object
+        description: authenticated User object
+        properties: {}
+      time:
+        type: string
+        format: YYYY-MM-DD HH:MM:SS+ss:ss
+        example: 2019-07-08 01:41:50+00:00
+      outing:
+        $ref: '#/definitions/Outing'
+      knots:
+        type: integer
+        example: 2
+      belay:
+        type: integer
+        example: 2
+      rappel:
+        type: integer
+        example: 2
+      systems:
+        type: integer
+        example: 2
+      anchor_safety:
+        type: integer
+        example: 2
+      gear_placement:
+        type: integer
+        example: 2
+      anchor_building:
+        type: integer
+        example: 2
+      safety:
+        type: integer
+        example: 2
+      efficiency:
+        type: integer
+        example: 2
+      gear_cleaning:
+        type: integer
+        example: 2
+      technique:
+        type: integer
+        example: 2
+      routefinding:
+        type: integer
+        example: 2
+      areas:
+        type: string
+        example: Bob's Wall
+      current_comfort_grade:
+        type: string
+        format: YDS climbing grade
+        example: "5.9"
+      current_limit_grade:
+        type: string
+        format: YDS climbing grade
+        example: "5.9"
+      recommendation:
+        type: string
+        example: 5.9 multipitch
+      comments:
+        type: string
+        example: Here are some comments about how this student did.
+      trip_planning:
+        type: integer
+        example: 2
+      beta_sheet:
+        type: integer
+        example: 2
+      transitions:
+        type: integer
+        example: 2
+      communication:
+        type: integer
+        example: 2
+  InstructorReview:
+    type: object
+    properties:
+      instructor:
+        type: object
+        description: a Django User object
+        properties: {}
+      author:
+        type: object
+        description: authenticated Django User
+        properties: {}
+      outing:
+        $ref: '#/definitions/Outing'
+      learning_style:
+        type: integer
+        example: 2
+      explanations:
+        type: integer
+        example: 2
+      demos:
+        type: integer
+        example: 2
+      patience:
+        type: integer
+        example: 2
+      did_well:
+        type: string
+        example: Helped me learn knots
+      did_bad:
+        type: string
+        example: Didn't explain rappelling
+      safety:
+        type: string
+        example: No safety issues
+      comments:
+        type: string
+        example: Here are comments about how this instructor did
