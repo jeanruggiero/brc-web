@@ -5,4 +5,4 @@ from .models import Homework
 class HomeworkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Homework
-        fields = ['title', 'description', 'link', 'due_date', 'lecture']
+        fields = ['id', 'title', 'description', 'link', 'due_date', 'lecture']

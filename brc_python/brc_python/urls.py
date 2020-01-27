@@ -22,18 +22,15 @@ urlpatterns = [
     path('homework/', include('homework.urls')),
     path('meetings/', include('meetings.urls')),
     path('posts/', include('posts.urls')),
+    path('reviews/', include('reviews.urls')),
+    path('students/', include('students.urls')),
 ]
 
 # from rest_framework import routers
 
-# from gear import views as gear_views
-#from homework import views as homework_views
 
 # router = routers.DefaultRouter()
 # router.register(r'gear', gear_views.GearView, 'gear')
 #router.register(r'homework', homework_views.HomeworkView, 'homework')
 
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('api/', include(router.urls)),
-# ]
+

@@ -11,5 +11,5 @@ class LectureSerializer(serializers.ModelSerializer):
 class OutingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Outing
-        fields = ['title', 'location', 'start_date', 'end_date', 'objectives', 'description', 'itinerary',
+        fields = ['id', 'title', 'location', 'start_date', 'end_date', 'objectives', 'description', 'itinerary',
                   'campground', 'campsite', 'camping_location_url', 'camping_checkin_time']
